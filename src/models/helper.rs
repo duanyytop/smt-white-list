@@ -24,10 +24,3 @@ pub fn parse_lock_hash(lock_hash: [u8; 32]) -> (String, u32) {
         generate_crc(hex::encode(lock_hash).as_bytes()),
     )
 }
-
-pub fn parse_cota_id_and_token_index_pairs(pairs: Vec<([u8; 20], [u8; 4])>) -> Vec<(String, u32)> {
-    pairs
-        .into_iter()
-        .map(|pair| (hex::encode(pair.0), u32::from_be_bytes(pair.1)))
-        .collect()
-}

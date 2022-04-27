@@ -40,12 +40,32 @@ pub fn get_script_map_by_ids(script_ids: Vec<i64>) -> HashMap<i64, Vec<u8>> {
             .expect("Query script error");
         scripts_dbs.extend(scripts_db);
     }
-    let scripts_: Vec<(i64, Vec<u8>)> = scripts_dbs
+    scripts_dbs
         .iter()
         .map(|script_db| (script_db.id, generate_script_vec(script_db)))
-        .collect();
-    let script_map: HashMap<i64, Vec<u8>> = scripts_.into_iter().collect();
-    script_map
+        .collect::<HashMap<i64, Vec<u8>>>()
+}
+
+pub fn get_all_script_hashes() -> Vec<Vec<u8>> {
+    let conn = &POOL.clone().get().expect("Mysql pool connection error");
+    let mut lock_scripts: Vec<Vec<u8>> = vec![];
+    let mut page: i64 = 0;
+    loop {
+        let sub_scripts: Vec<Vec<u8>> = scripts
+            .select((id, code_hash, hash_type, args))
+            .limit(PAGE_SIZE)
+            .offset(PAGE_SIZE * page)
+            .load::<Script>(conn)
+            .map(parse_scripts)
+            .expect("Query script error");
+        let length = sub_scripts.len();
+        lock_scripts.extend(sub_scripts);
+        if length < (PAGE_SIZE as usize) {
+            break;
+        }
+        page += 1;
+    }
+    lock_scripts
 }
 
 fn parse_script(scripts_: Vec<Script>) -> Vec<ScriptDb> {
@@ -68,4 +88,23 @@ fn generate_script_vec(script_db: &ScriptDb) -> Vec<u8> {
         .args(BytesBuilder::default().set(args_bytes).build())
         .build();
     script.as_slice().to_vec()
+}
+
+fn parse_scripts(scripts_: Vec<Script>) -> Vec<Vec<u8>> {
+    scripts_
+        .into_iter()
+        .map(|script| {
+            let args_: Vec<Byte> = parse_bytes(script.args)
+                .iter()
+                .map(|v| Byte::from(*v))
+                .collect();
+            let code_hash_ = parse_bytes_n::<32>(script.code_hash);
+            let script = ScriptBuilder::default()
+                .code_hash(Byte32::from_slice(&code_hash_).unwrap())
+                .hash_type(Byte::from(script.hash_type))
+                .args(BytesBuilder::default().set(args_).build())
+                .build();
+            script.as_slice().to_vec()
+        })
+        .collect()
 }
