@@ -13,18 +13,18 @@ use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Queryable, Debug)]
 pub struct Script {
-    pub id: i64,
+    pub id:        i64,
     pub code_hash: String,
     pub hash_type: u8,
-    pub args: String,
+    pub args:      String,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct ScriptDb {
-    pub id: i64,
+    pub id:        i64,
     pub code_hash: [u8; 32],
     pub hash_type: u8,
-    pub args: Vec<u8>,
+    pub args:      Vec<u8>,
 }
 
 pub fn get_script_map_by_ids(script_ids: Vec<i64>) -> HashMap<i64, Vec<u8>> {
@@ -72,10 +72,10 @@ fn parse_script(scripts_: Vec<Script>) -> Vec<ScriptDb> {
     scripts_
         .into_iter()
         .map(|script| ScriptDb {
-            id: script.id,
+            id:        script.id,
             code_hash: parse_bytes_n::<32>(script.code_hash),
             hash_type: script.hash_type,
-            args: parse_bytes(script.args),
+            args:      parse_bytes(script.args),
         })
         .collect()
 }

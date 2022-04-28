@@ -87,19 +87,19 @@ fn generate_params(lock_script: &[u8]) -> Value {
 #[derive(Deserialize)]
 struct Cell {
     #[serde(skip_deserializing)]
-    _output: CellOutput,
-    output_data: JsonBytes,
+    _output:       CellOutput,
+    output_data:   JsonBytes,
     #[serde(skip_deserializing)]
-    _out_point: OutPoint,
+    _out_point:    OutPoint,
     #[serde(skip_deserializing)]
     _block_number: BlockNumber,
     #[serde(skip_deserializing)]
-    _tx_index: Uint32,
+    _tx_index:     Uint32,
 }
 
 #[derive(Deserialize)]
 struct CellPagination {
-    objects: Vec<Cell>,
+    objects:      Vec<Cell>,
     #[serde(skip_deserializing)]
     _last_cursor: JsonBytes,
 }

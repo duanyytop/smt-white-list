@@ -8,17 +8,17 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Queryable, Debug)]
 struct DefineCotaNft {
-    pub cota_id: String,
-    pub total: u32,
-    pub issued: u32,
+    pub cota_id:   String,
+    pub total:     u32,
+    pub issued:    u32,
     pub configure: u8,
 }
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct DefineDb {
-    pub cota_id: [u8; 20],
-    pub total: u32,
-    pub issued: u32,
+    pub cota_id:   [u8; 20],
+    pub total:     u32,
+    pub issued:    u32,
     pub configure: u8,
 }
 
@@ -51,9 +51,9 @@ fn parse_define_cota_nft(defines: Vec<DefineCotaNft>) -> Vec<DefineDb> {
     defines
         .into_iter()
         .map(|define| DefineDb {
-            cota_id: parse_bytes_n::<20>(define.cota_id),
-            total: define.total,
-            issued: define.issued,
+            cota_id:   parse_bytes_n::<20>(define.cota_id),
+            total:     define.total,
+            issued:    define.issued,
             configure: define.configure,
         })
         .collect()

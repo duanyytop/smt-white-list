@@ -10,26 +10,26 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Queryable, Debug, Clone)]
 pub struct WithdrawCotaNft {
-    pub cota_id: String,
-    pub token_index: u32,
-    pub out_point: String,
-    pub state: u8,
-    pub configure: u8,
-    pub characteristic: String,
+    pub cota_id:                 String,
+    pub token_index:             u32,
+    pub out_point:               String,
+    pub state:                   u8,
+    pub configure:               u8,
+    pub characteristic:          String,
     pub receiver_lock_script_id: i64,
-    pub version: u8,
+    pub version:                 u8,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct WithdrawDb {
-    pub cota_id: [u8; 20],
-    pub token_index: [u8; 4],
-    pub out_point: [u8; 24],
-    pub state: u8,
-    pub configure: u8,
-    pub characteristic: [u8; 20],
+    pub cota_id:              [u8; 20],
+    pub token_index:          [u8; 4],
+    pub out_point:            [u8; 24],
+    pub state:                u8,
+    pub configure:            u8,
+    pub characteristic:       [u8; 20],
     pub receiver_lock_script: Vec<u8>,
-    pub version: u8,
+    pub version:              u8,
 }
 
 pub fn get_withdrawal_cota_by_lock_hash(lock_hash_: [u8; 32]) -> Vec<WithdrawDb> {
@@ -72,14 +72,14 @@ fn parse_withdraw_db(withdrawals: Vec<WithdrawCotaNft>) -> Vec<WithdrawDb> {
             .unwrap()
             .clone();
         withdraw_db_vec.push(WithdrawDb {
-            cota_id: parse_bytes_n::<20>(withdrawal.cota_id),
-            token_index: withdrawal.token_index.to_be_bytes(),
-            configure: withdrawal.configure,
-            state: withdrawal.state,
-            characteristic: parse_bytes_n::<20>(withdrawal.characteristic),
+            cota_id:              parse_bytes_n::<20>(withdrawal.cota_id),
+            token_index:          withdrawal.token_index.to_be_bytes(),
+            configure:            withdrawal.configure,
+            state:                withdrawal.state,
+            characteristic:       parse_bytes_n::<20>(withdrawal.characteristic),
             receiver_lock_script: lock_script,
-            out_point: parse_bytes_n::<24>(withdrawal.out_point),
-            version: withdrawal.version,
+            out_point:            parse_bytes_n::<24>(withdrawal.out_point),
+            version:              withdrawal.version,
         })
     }
     withdraw_db_vec

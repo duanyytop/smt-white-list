@@ -9,19 +9,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Queryable, Debug)]
 struct HoldCotaNft {
-    pub cota_id: String,
-    pub token_index: u32,
-    pub state: u8,
-    pub configure: u8,
+    pub cota_id:        String,
+    pub token_index:    u32,
+    pub state:          u8,
+    pub configure:      u8,
     pub characteristic: String,
 }
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct HoldDb {
-    pub cota_id: [u8; 20],
-    pub token_index: [u8; 4],
-    pub state: u8,
-    pub configure: u8,
+    pub cota_id:        [u8; 20],
+    pub token_index:    [u8; 4],
+    pub state:          u8,
+    pub configure:      u8,
     pub characteristic: [u8; 20],
 }
 
@@ -56,10 +56,10 @@ fn parse_hold_cota_nfts(holds: Vec<HoldCotaNft>) -> Vec<HoldDb> {
 
 fn parse_hold_cota_nft(hold: HoldCotaNft) -> HoldDb {
     HoldDb {
-        cota_id: parse_bytes_n::<20>(hold.cota_id),
-        token_index: hold.token_index.to_be_bytes(),
-        state: hold.state,
-        configure: hold.configure,
+        cota_id:        parse_bytes_n::<20>(hold.cota_id),
+        token_index:    hold.token_index.to_be_bytes(),
+        state:          hold.state,
+        configure:      hold.configure,
         characteristic: parse_bytes_n::<20>(hold.characteristic),
     }
 }
