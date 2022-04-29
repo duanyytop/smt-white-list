@@ -11,6 +11,6 @@ run:
 	RUST_LOG=info cargo run
 
 run-release:
-	RUST_LOG=info ./target/release/cota-aggregator
+	RUST_LOG=info ./target/release/smt-white-list
 
 .PHONY: build run
