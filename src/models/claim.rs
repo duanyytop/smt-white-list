@@ -51,7 +51,7 @@ pub fn load_claim_cota_count_by_lock_hash(lock_hash_: [u8; 32]) -> i64 {
     claimed_cota_nft_kv_pairs
         .filter(lock_hash_crc.eq(lock_hash_crc_))
         .filter(lock_hash.eq(lock_hash_hex.clone()))
-        .limit(2)
+        .limit(5)
         .count()
         .get_result::<i64>(conn)
         .expect("Query claim count error")
