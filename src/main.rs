@@ -49,9 +49,6 @@ async fn main() {
         info!("Scan progress: {}/{}", index, length);
         let lock_hash = blake2b_256(lock_script.clone());
         let claim_count = load_claim_cota_count_by_lock_hash(lock_hash);
-        if claim_count > 1 {
-            continue;
-        }
         if claim_count == 0 && load_withdraw_cota_count_by_lock_hash(lock_hash) > 0 {
             continue;
         }
@@ -61,6 +58,10 @@ async fn main() {
             if db_smt_root.as_slice() != cell_smt_root.as_slice() {
                 white_list_len += 1;
                 info!("White list index: {}", white_list_len);
+                file.write_all(claim_count.to_string().as_bytes())
+                    .expect("write count failed");
+                file.write_all(" / ".as_bytes())
+                    .expect("write separate failed");
                 file.write_all(hex::encode(&lock_hash).as_bytes())
                     .expect("write lock hash failed");
                 file.write_all(" / ".as_bytes())
